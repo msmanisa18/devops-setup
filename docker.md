@@ -18,15 +18,20 @@
 
 ### 7.Verify that the ec2-user can run Docker commands without using sudo.
 
-####8. Docker Commands
+#### 8. Docker Commands
 
 #### docker -v  --> To check Docker version installed
 #### docker info --> To view a global overview of your Docker environment
 #### systemctl status docker --> To check Docker is running or not
-#### docker ps --> To Display all the running containers
+#### docker ps --> ps = process status - To Display all the running containers
+#### docker ps -a --> To Display both running and stopped containers
 #### docker images --> Check all the images
 #### docker pull hello-world --> Pull an image from Docker Hub / Docker Registry
-#### docker run IMAGE_ID  --> To run Docker Image
+#### docker run IMAGE_ID  or docker run REPOSITORY_NAME --> To run Docker Image
+#### cat /etc/os-release --> to check the OS details
+#### exit --> to come out of a container, container will get stopped
+#### docker rm container_id --> to delete a stopped container
+#### docker rmi image_id --> to delete an image, we should delete the container first
 
 
 
