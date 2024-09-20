@@ -33,7 +33,7 @@
 #### docker rm container_id --> to delete a stopped container
 #### docker rmi image_id --> to delete an image, we should delete the container first
 
-#### # -------------------------------------------------------------------------- #
+#### *** -------------------------------------------------------------------------- ***
 
 #### docker pull ubuntu ==> Pull image from DockerHub
 #### docker run ubuntu  ==> Creates container from Docker Image
