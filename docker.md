@@ -43,7 +43,10 @@
 #### docker stop my_ubuntu   ==> To stop a container using it's name
 #### docker attach my_ubuntu ==> To go inside a running container
 
-
+#### docker diff ubuntu_test ==> Shows the difference of the container from base image
+##### C - Change
+##### A - Append
+##### D - Deletion
 
 
 
