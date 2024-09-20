@@ -47,7 +47,7 @@
 ##### C - Change
 ##### A - Append
 ##### D - Deletion
-
+#### docker commit ubuntu_test ubuntu1 ==> Create Docker image from a Container
 
 
 
