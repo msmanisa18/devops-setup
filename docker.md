@@ -60,10 +60,43 @@
 		FROM openjdk:11
 			In the container, a Linux VM will be set up and JDK 11 gets installed.
 
+#### MAINTAINER --> Name of maintainer / Author / Owner / Description
+		Ex: MAINTAINER <test@gmail.com>
+
+#### COPY --> To copy the file from host machine to container.
 
 #### RUN --> To execute commands
-#### MAINTAINER --> Name of maintainer / Author / Owner / Description
-#### COPY --> Copy files from local system to 
+	Executes instructions while creating Docker image.
+	Ex: RUN 'sudo yum install maven'
+	RUN 'git clone url'
+
+#### CMD --> Executes instructions while creating Docker Container.
+	Only last cmd will picked up, from multiple CMDs.
+	Ex: CMD 'java -jar ds.jar'
+
+#### ENV --> To set environment variables
+
+#### WORKDIR --> To set working directory for a container
+
+#### Steps:
+
+##### 1: Create a file having name as Dockerfile
+##### 2: Add instructions to it
+##### 3: Build the Dockerfile to create the Docker image
+##### 4: Run the Docker image to create the container
+
+#### Example 1
+	FROM ubuntu
+	RUN echo "Hello World !!!" > /tmp/sample_file.txt
+ 
+#### Example 2
+	FROM ubuntu
+	WORKDIR /tmp
+	ENV institute_name IDREAM
+	COPY file1.txt /tmp
+ 
+
+
 
 
 
