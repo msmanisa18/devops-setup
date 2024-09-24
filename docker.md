@@ -49,6 +49,54 @@
 ##### D - Deletion
 #### docker commit ubuntu_test ubuntu1 ==> Create Docker image from a Container
 
+#### *** -------------------------------------------------------------------------- ***
+
+### Dockerfile --> A text file containing a set of instructions. It contains instructions to build Docker image. Application dependencies specified in Dockerfile.
+
+#### Dockerfile Keywords:
+
+#### FROM --> To specify base image required for our application, must be on top of a Dockerfile
+	Ex: 
+		FROM openjdk:11
+			In the container, a Linux VM will be set up and JDK 11 gets installed.
+
+
+#### RUN --> To execute commands
+#### MAINTAINER --> Name of maintainer / Author / Owner / Description
+#### COPY --> Copy files from local system to 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
