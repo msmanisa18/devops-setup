@@ -83,6 +83,11 @@
 ##### 1: Create a file having name as Dockerfile
 ##### 2: Add instructions to it
 ##### 3: Build the Dockerfile to create the Docker image
+
+	docker build -t test .
+	-t stands for tag name, name given to Docker Image
+	. means in the current directory Dockerfile is present
+
 ##### 4: Run the Docker image to create the container
 
 #### Example 1
