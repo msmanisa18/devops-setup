@@ -100,6 +100,21 @@
 	ENV institute_name IDREAM
 	COPY file1.txt /tmp
  
+#### Run Tomcat Server On Docker Container and do the port mappint
+
+Information taken from: https://forums.docker.com/t/tomcat-give-error-404/95130
+
+If the information which is provided on Tomcat image official documentation in DockerHub will not run Tomcat properly, then follow these steps:
+Based on the community request, Webapps folder is moved to the webapps.dist folder, which means webapps folder is empty and there are no files to serve on the browser. 
+That is when you saw the error message The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.
+To re-enable the webapps, we need to move the files from webapps.dist to webapps. Here are the steps to run to make sure that the tomcat server is up and running without any issues.
+
+docker pull tomcat:latest
+docker run -d --name mytomcat -p 8080:8080 tomcat:latest
+docker exec -it mytomcat /bin/bash
+mv webapps webapps2
+mv webapps.dist/ webapps
+exit
 
 
 
