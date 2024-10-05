@@ -117,7 +117,10 @@ Information taken from: https://forums.docker.com/t/tomcat-give-error-404/95130
 	exit
 
 
-
+#### Create Image for spring boot application
+	FROM openjdk
+	COPY *.jar /
+	ENTRYPOINT [ "java", "-jar", "demo-1.0.0.jar" ]
 
 
 
