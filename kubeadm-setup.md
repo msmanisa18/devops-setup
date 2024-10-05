@@ -51,6 +51,7 @@
 #### Run following commands on master:
 
 	1. kubeadm init
+ 		or --> kubeadm init --pod-network-cidr=192.168.0.0/16
 
 	2. mkdir -p $HOME/.kube
 	
@@ -73,4 +74,13 @@
 	kubectl get pods
 	kubectl get svc
 	kubectl get deployment
+
+
+### Flannel
+ 	vi /run/flannel/subnet.env
+
+	FLANNEL_NETWORK=10.240.0.0/16
+	FLANNEL_SUBNET=10.240.0.1/24
+	FLANNEL_MTU=1450
+	FLANNEL_IPMASQ=true
 
