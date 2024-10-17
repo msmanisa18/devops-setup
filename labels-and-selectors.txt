@@ -1,0 +1,37 @@
+Labels are any key-value pairs that are used to identify that pod. 
+
+Selectors are used to retrieve the pods through labels.
+
+Ex of selector: kubectl get pods -l name=pod1
+
+Example of label:
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world
+  labels:
+    env: DEV
+spec:
+  selector:
+    matchLabels:
+      run: hello-world-example
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: hello-world-example
+    spec:
+      containers:
+        - name: hello-world
+          image: manisa2024/hello-spring-boot:v1
+          ports:
+            - containerPort: 8085
+              protocol: TCP
+
+Label can be added ion 2 ways:
+1. Declarative --> In manifest file
+2. Imperative --> Run time
+
+kubectl get pods --show-labels    --> to check the labels
+kubectl label pods hello-world-6f7d5d7c4-c5cbs name=pod1   --> to provide label to a pod
