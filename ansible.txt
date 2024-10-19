@@ -1,0 +1,78 @@
+Configuration Management:
+	- Configuration means system specifications.
+		Ex: CPU, RAM SSD, how many users are there, how many files are there, what packages installed, what services are running.
+	- Management means adding / modifying / deleting any files or directories.
+	- If you change any change on your machine means you are doing the configuration management.
+	- This management can be done in 2 ways:
+		1. Manual - Being done by system admins, they take the remote access and do the changes manually.
+		2. Automated - DevOps Engineers do this automation.
+	Configuration management is a process which can be automated by: Chef / Ansible / Puppet
+
+IAC (Infrastructure As Code):
+	- Create a file, write the code on it, the same file will be executed on all the machines, it will create the infrastructure.
+	- We are converting the code to infra, and this process is called as IAC.
+	- This code is versionalbe.
+
+Ansible:
+	- Ansible is a configuration management tool, written in Python.
+		Ex: If we need to install 10 softwares in 20 different machines, it will take more time to do it manually by System Admin team.
+			But the same can be done by single DevOps person in few mins.
+	- In Ansible we have one server and multiple nodes. We will be installing software on the nodes.
+	- Ansible will be installed only in Server, not required on nodes, Master will communicate with nodes by using SSH.
+	- We will create a file on Master. This file is called as Playbook where we write the code in YAML.
+	- This code will run in nodes where infrastructure will get created.
+	- On every nodes there will be one configuration file under etc directory.
+	- When we run any Playbook before that one Setup module from Server will verify the configuration. 
+	- Then Ansible decides whether the software is already installed or do we need to install.
+	- Whatever modules are not there only those modules will get installed, this concept is called as idempotence.
+	- Means not repeating the same task again and again.
+	- Ansible server will push the code to nodes, so Ansible is Push based where as Chef is Pull based.
+
+
+sudo su
+yum update -y
+adduser ansadmin
+passwd ansadmin ---> 12345
+
+EDITOR=vi visudo
+root    ALL=(ALL)       ALL
+ansadmin ALL=(ALL) NOPASSWD: ALL
+
+
+vi /etc/ssh/ssh_config
+# Host *
+#   ForwardAgent no
+#   ForwardX11 no
+    PasswordAuthentication yes
+
+service sshd reload
+
+
+[ansadmin@ip-172-31-15-124 ~]$ pwd
+/home/ansadmin
+[ansadmin@ip-172-31-15-124 ~]$ whoami
+ansadmin
+[ansadmin@ip-172-31-15-124 ~]$
+
+ssh-keygen
+
+
+===================================
+Node:
+
+sudo su
+yum update -y
+adduser user1
+passwd user1    --> 1234
+
+vi /etc/ssh/ssh_config
+# Host *
+#   ForwardAgent no
+#   ForwardX11 no
+    PasswordAuthentication yes
+
+service sshd reload
+
+hostname -i
+
+
