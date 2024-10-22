@@ -29,50 +29,72 @@ Ansible:
 	- Ansible server will push the code to nodes, so Ansible is Push based where as Chef is Pull based.
 
 
+
+
+
+in node 1:
+============================
+
 sudo su
 yum update -y
-adduser ansadmin
+hostnamectl set-hostname node1
+bash
+useradd user1
+passwd user1 ---> 12345
+
+vi /etc/sudoers
+1. root    ALL=(ALL)       ALL
+ansadmin ALL=(ALL) NOPASSWD:ALL
+
+2. ## Allows people in group wheel to run all commands
+%wheel  ALL=(ALL)       ALL
+ansadmin ALL=(ALL) NOPASSWD:ALL
+
+vi /etc/ssh/sshd_config
+1. 
+PasswordAuthentication yes
+2.
+PermitRootLogin yes
+
+systemctl restart sshd
+
+
+
+
+
+
+in server:
+=========================
+sudo su
+yum update -y
+hostnamectl set-hostname server
+bash
+useradd ansadmin
 passwd ansadmin ---> 12345
 
-EDITOR=vi visudo
-root    ALL=(ALL)       ALL
-ansadmin ALL=(ALL) NOPASSWD: ALL
+vi /etc/sudoers
+1. root    ALL=(ALL)       ALL
+ansadmin ALL=(ALL) NOPASSWD:ALL
 
+2. ## Allows people in group wheel to run all commands
+%wheel  ALL=(ALL)       ALL
+ansadmin ALL=(ALL) NOPASSWD:ALL
 
-vi /etc/ssh/ssh_config
-# Host *
-#   ForwardAgent no
-#   ForwardX11 no
-    PasswordAuthentication yes
+vi /etc/ssh/sshd_config
+1. 
+PasswordAuthentication yes
+2.
+PermitRootLogin yes
 
-service sshd reload
+systemctl restart sshd
 
-
-[ansadmin@ip-172-31-15-124 ~]$ pwd
-/home/ansadmin
-[ansadmin@ip-172-31-15-124 ~]$ whoami
-ansadmin
-[ansadmin@ip-172-31-15-124 ~]$
+su ansadmin
 
 ssh-keygen
 
+ssh-copy-id user1@172.31.2.61
 
-===================================
-Node:
+ssh user1@172.31.2.61
 
-sudo su
-yum update -y
-adduser user1
-passwd user1    --> 1234
-
-vi /etc/ssh/ssh_config
-# Host *
-#   ForwardAgent no
-#   ForwardX11 no
-    PasswordAuthentication yes
-
-service sshd reload
-
-hostname -i
 
 
