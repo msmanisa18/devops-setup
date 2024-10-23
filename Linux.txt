@@ -1,0 +1,31 @@
+
+What is an OS?
+	user --> application --> OS --> Hardware
+Types:
+	Windows, Linux
+History:
+	1991: By Linus Torvalds
+	Found some challenges in UNIX and done some changes to it, released Linux to market.
+Linux Distributions:
+	Many people taken this Linux OS, done the modification according to their requirements.
+	These are called the Linux Distributions. 
+	Some of them are free and some of them are paid.
+	Basically 2 types of Linux distributions are available on market.
+		RPM (Red Hat Package Manager based): 
+			originally written in 1997
+				Ex: 
+					CentOS - Community Enterprise Linux Operating System was founded in 2004.
+					Fedora Linux - Fedora Linux is a Linux distribution developed by the Fedora Project. It was originally developed in 2003
+					Amazon Linux
+		DEB (Debian-based): Ubuntu, Kali Linux, Linux Mint, etc.
+
+Linux package manager:
+	It a tool that helps you manage software on your system by automating the process of installing, upgrading, removing, and obtaining packages.
+	It is a command-line utility that helps you install, update, and remove software packages
+	Package managers for RPM: yum - Yellowdog Updater, Modified, rpm - Red Hat Package Manager, dnf - Dandified YUM
+	Package managers for DEB: apt - Advanced Packaging Tool
+
+
+When we launch an Amazon EC2 instance, we get ec2-user as a normal user having root access along with a root accout who can manage everything.
+Normal user starts with $ where root user starts with #.
+To install, update, and remove software packages, we need root user access.
