@@ -31,70 +31,215 @@ Ansible:
 
 
 
+Lab:
+	- Launch 3 EC2 instances (Amazon Linux T2 Micro 8 GB, total 3 machines, one server, 2 nodes. Rename them accordingly as Master, Node-1, Node-2).
+	- Security Group should be SSH and HTTP.
 
-in node 1:
-============================
+On Node-1:
 
-sudo su
-yum update -y
-hostnamectl set-hostname node1
-bash
-useradd user1
-passwd user1 ---> 12345
+	1. sudo su
+	2. yum update -y
+	3. hostnamectl set-hostname node1
+	4. bash
+	5. useradd user1
+	6. passwd user1 ---> 12345
 
-vi /etc/sudoers
-1. root    ALL=(ALL)       ALL
-ansadmin ALL=(ALL) NOPASSWD:ALL
+Edit the sudoers file:
+	7. vi /etc/sudoers
 
-2. ## Allows people in group wheel to run all commands
-%wheel  ALL=(ALL)       ALL
-ansadmin ALL=(ALL) NOPASSWD:ALL
+	Add following line under --> root    ALL=(ALL)       ALL
+	user1 ALL=(ALL) NOPASSWD:ALL
 
-vi /etc/ssh/sshd_config
-1. 
-PasswordAuthentication yes
-2.
-PermitRootLogin yes
+	## Allows people in group wheel to run all commands
+	%wheel  ALL=(ALL)       ALL
+	user1 ALL=(ALL) NOPASSWD:ALL
 
-systemctl restart sshd
+Edit the sshd_config file:
+	8. vi /etc/ssh/sshd_config
+	
+	PasswordAuthentication yes
+	PermitRootLogin yes
 
-
-
+	9. systemctl restart sshd
 
 
 
-in server:
-=========================
-sudo su
-yum update -y
-hostnamectl set-hostname server
-bash
-useradd ansadmin
-passwd ansadmin ---> 12345
+On Node-2:
 
-vi /etc/sudoers
-1. root    ALL=(ALL)       ALL
-ansadmin ALL=(ALL) NOPASSWD:ALL
+	1. sudo su
+	2. yum update -y
+	3. hostnamectl set-hostname node1
+	4. bash
+	5. useradd user2
+	6. passwd user2 ---> 12345
 
-2. ## Allows people in group wheel to run all commands
-%wheel  ALL=(ALL)       ALL
-ansadmin ALL=(ALL) NOPASSWD:ALL
+Edit the sudoers file:
+	7. vi /etc/sudoers
 
-vi /etc/ssh/sshd_config
-1. 
-PasswordAuthentication yes
-2.
-PermitRootLogin yes
+	Add following line under --> root    ALL=(ALL)       ALL
+	user2 ALL=(ALL) NOPASSWD:ALL
 
-systemctl restart sshd
+	## Allows people in group wheel to run all commands
+	%wheel  ALL=(ALL)       ALL
+	user2 ALL=(ALL) NOPASSWD:ALL
 
-su ansadmin
+Edit the sshd_config file:
+	8. vi /etc/ssh/sshd_config
+	
+	PasswordAuthentication yes
+	PermitRootLogin yes
 
-ssh-keygen
+	9. systemctl restart sshd
 
-ssh-copy-id user1@172.31.2.61
 
-ssh user1@172.31.2.61
+On Server:
+
+	1. sudo su
+	2. yum update -y
+	3. hostnamectl set-hostname server
+	4. bash
+	5. useradd ansadmin
+	6. passwd ansadmin ---> 12345
+
+Edit the sudoers file:
+	7. vi /etc/sudoers
+
+	Add following line under --> root    ALL=(ALL)       ALL
+	ansadmin ALL=(ALL) NOPASSWD:ALL
+
+	## Allows people in group wheel to run all commands
+	%wheel  ALL=(ALL)       ALL
+	ansadmin ALL=(ALL) NOPASSWD:ALL
+
+Edit the sshd_config file:
+	8. vi /etc/ssh/sshd_config
+	
+	PasswordAuthentication yes
+	PermitRootLogin yes
+
+	9. systemctl restart sshd
+
+	10. su ansadmin
+	11. cd
+	12. pwd
+	13. ll
+	14. ssh-keygen
+	15. ssh-copy-id user1@172.31.2.61  - private IP of node-1
+	16. ssh-copy-id user2@172.31.12.78 - private IP of node-2
+	17. ssh user1@172.31.2.61
+	18. ssh user2@172.31.12.78
+
+Now we can connect remotely from server to node, install/remove softwares and files.
+
+Now install ansible:
+
+	1. yum install ansible -y
+	2. Go to the location: /etc/ansible
+	3. Create a file as hosts - it is the inventry file.
+	4. Add server list to inventry file:
+
+Example:
+[ansadmin@server ansible]$ cat hosts
+[nodelist]
+172.31.12.78 ansible_user=user2
+172.31.1.94 ansible_user=user1
+
+	5. Create another file as ansible.cfg
+	6. Add following contents to it.
+
+[ansadmin@server ansible]$ cat ansible.cfg
+[defaults]
+inventory=/etc/ansible/hosts
+sudo_user=root
+
+7. Check Ansible version:
+[ansadmin@server ~]$ ansible --version
+ansible [core 2.15.3]
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = ['/home/ansadmin/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3.9/site-packages/ansible
+  ansible collection location = /home/ansadmin/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/bin/ansible
+  python version = 3.9.16 (main, Jul  5 2024, 00:00:00) [GCC 11.4.1 20230605 (Red Hat 11.4.1-2)] (/usr/bin/python3.9)
+  jinja version = 3.1.4
+  libyaml = True
+[ansadmin@server ~]$
+
+
+8. Check all the nodes connected:
+
+[ansadmin@server ~]$ ansible all --list-hosts
+  hosts (2):
+    172.31.12.78
+    172.31.1.94
+[ansadmin@server ~]$
+
+9. Check particular server list:
+[ansadmin@server ansible]$ ansible nodelist --list-hosts
+  hosts (2):
+    172.31.12.78
+    172.31.1.94
+[ansadmin@server ansible]$
+
+10. Check IP of particular node:
+[ansadmin@server ansible]$ ansible nodelist[0] --list-hosts
+  hosts (1):
+    172.31.12.78
+[ansadmin@server ansible]$ ansible nodelist[1] --list-hosts
+  hosts (1):
+    172.31.1.94
+[ansadmin@server ansible]$ ansible nodelist[2] --list-hosts
+[WARNING]: No hosts matched, nothing to do
+  hosts (0):
+[ansadmin@server ansible]$
+[ansadmin@server ansible]$ ansible nodelist[-1] --list-hosts
+  hosts (1):
+    172.31.1.94
+[ansadmin@server ansible]$ ansible nodelist[-2] --list-hosts
+  hosts (1):
+    172.31.12.78
+[ansadmin@server ansible]$
+[ansadmin@server ansible]$ ansible nodelist[0:1] --list-hosts
+  hosts (2):
+    172.31.12.78
+    172.31.1.94
+[ansadmin@server ansible]$
+
+
+Ad hoc commands -- single line commands -- we can use the command directly in server, it will get executed in nodes. Ex:
+
+1. List down files of nodes from server:
+[ansadmin@server ansible]$ ansible nodelist -a "ls -l /tmp" -b
+[WARNING]: Platform linux on host 172.31.12.78 is using the discovered Python interpreter at /usr/bin/python3.9, but future installation of another Python interpreter could change the
+meaning of that path. See https://docs.ansible.com/ansible-core/2.15/reference_appendices/interpreter_discovery.html for more information.
+172.31.12.78 | CHANGED | rc=0 >>
+total 4
+drwx------. 2 root root 60 Oct 24 16:37 ansible_ansible.legacy.command_payload_p926n1t0
+-rw-r--r--. 1 root root 18 Oct 24 16:33 file.txt
+drwx------. 3 root root 60 Oct 23 23:55 systemd-private-d17c6b95fa994e5598658327ac3b8989-chronyd.service-UlmjYt
+drwx------. 3 root root 60 Oct 23 23:55 systemd-private-d17c6b95fa994e5598658327ac3b8989-dbus-broker.service-XbNZfA
+drwx------. 3 root root 60 Oct 23 23:55 systemd-private-d17c6b95fa994e5598658327ac3b8989-policy-routes@enX0.service-tyKwfF
+drwx------. 3 root root 60 Oct 23 23:55 systemd-private-d17c6b95fa994e5598658327ac3b8989-systemd-logind.service-3AqMtp
+drwx------. 3 root root 60 Oct 23 23:55 systemd-private-d17c6b95fa994e5598658327ac3b8989-systemd-resolved.service-Iw7ewc
+[WARNING]: Platform linux on host 172.31.1.94 is using the discovered Python interpreter at /usr/bin/python3.9, but future installation of another Python interpreter could change the
+meaning of that path. See https://docs.ansible.com/ansible-core/2.15/reference_appendices/interpreter_discovery.html for more information.
+172.31.1.94 | CHANGED | rc=0 >>
+total 4
+drwx------. 2 root root 60 Oct 24 16:37 ansible_ansible.legacy.command_payload_496d1ifs
+-rw-r--r--. 1 root root 18 Oct 24 16:33 file.txt
+drwx------. 3 root root 60 Oct 23 23:55 systemd-private-396b1b035ac64ff194375e5b988bb1e2-chronyd.service-yaaVBY
+drwx------. 3 root root 60 Oct 23 23:55 systemd-private-396b1b035ac64ff194375e5b988bb1e2-dbus-broker.service-mlpAiN
+drwx------. 3 root root 60 Oct 23 23:55 systemd-private-396b1b035ac64ff194375e5b988bb1e2-policy-routes@enX0.service-DdxHs9
+drwx------. 3 root root 60 Oct 23 23:55 systemd-private-396b1b035ac64ff194375e5b988bb1e2-systemd-logind.service-rpudvK
+drwx------. 3 root root 60 Oct 23 23:55 systemd-private-396b1b035ac64ff194375e5b988bb1e2-systemd-resolved.service-cTwFXa
+[ansadmin@server ansible]$
+
+2. install java:
+ansible nodelist -m yum -a "pkg=java state=present" -b
+
+
+
+
 
 
 
