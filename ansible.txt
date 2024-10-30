@@ -237,7 +237,84 @@ drwx------. 3 root root 60 Oct 23 23:55 systemd-private-396b1b035ac64ff194375e5b
 2. install java:
 ansible nodelist -m yum -a "pkg=java state=present" -b
 
+=====================================================================
 
+
+1. Under /etc/ansible/ we keep 2 files:
+	1. hosts 
+		- This file is called as inventory file. It cantains Ip addresses of Nodes.
+		- Here we keep IP addresses of Nodes, then only Server will recognize the Nodes.
+		- We make the Nodes as groups inside the inventory file.
+		- Whenever we will push codes to a particular group, the Server will push codes to all the Nodes present under the group.
+
+			Example:
+			[ansadmin@server ansible]$ cat hosts
+			[nodelist]
+			172.31.12.78 ansible_user=user2
+			172.31.1.94 ansible_user=user1
+
+	2. ansible.cfg
+		- This is the main configuration file for Ansible.
+		- We put the inventory file details in this configuration file.
+		
+			Example:
+			[defaults]
+			inventory=/etc/ansible/hosts
+
+2. Ansible Modules:
+	- An Ansible module is a small program that performs actions on the nodes specified.
+
+3. There are 2 ways by which we can write the code in Ansible Server.
+	1. Ad-Hoc Commands
+		- Ad-hoc commands are great for tasks you repeat rarely. 
+			For example, if you want to power off all the machines in your lab for Christmas vacation, you could execute a quick one-liner in Ansible without writing a playbook. 
+		- These are the single line commands. We can use the command directly in server, it will get executed in nodes.
+		- If we want to execute only one activity, it can be done via Ad-Hoc commands.
+		
+		Example: List down files of nodes from server:
+			1. ansible all -m command -a "ls"
+			2. ansible all -m command -a "ls -l /tmp"
+		--> Ansible commands start with ansible.
+		--> all --> means each and every group and all the nodes present on the group.
+		--> -m --> Means nane of the Module.
+		--> -a --> Means arbitrarily, what we give within the double quotes.
+		--> command --> This is a module to execute linux commands.
+		--> -b --> meaning becoming root
+		
+		Example: Install Java
+		ansible all -m command -a "yum install java -y" -b
+		or
+		ansible all -m yum -a "pkg=java state=present" -b
+		
+		
+		Check Java version
+		ansible all -m command -a "java -version" -b
+		
+		Example: Install maven
+		ansible all -m yum -a "pkg=maven state=present" -b
+		
+		Copy file:
+		ansible all -m copy -a "src=sample,txt dest=/tmp/" -b
+		
+		
+	2. Ansible Playbook
+		- If we have multiple tasks to be executed, we should go with Playbook.
+
+		Execute playbook:
+			ansible-playbook playbook-ex1.yml
+
+
+
+[ansadmin@server ~]$ cat playbook-ex1.yml
+---
+- name: Playbook to create one user on all nodes
+  hosts: all
+  become: yes
+  tasks:
+  - name: Create a user with name as testuser1
+    user: name=testuser1
+...
+[ansadmin@server ~]$
 
 
 
