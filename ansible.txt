@@ -263,7 +263,46 @@ ansible nodelist -m yum -a "pkg=java state=present" -b
 
 2. Ansible Modules:
 	- An Ansible module is a small program that performs actions on the nodes specified.
+	- When we push some code from server to node, first setup module will go to node and brings the information.
+	- Then server analyzes whether to execute the command or not.
+	- To explicitly see the setup module, what data it collects, we can use:
+		Ex: ansible all -m setup
+	Ex:
+	1. command module - To run Linux commands on Nodes.
+		Ex-1: ansible all -m command -a "ls"
+			Here root access is not required, so we can skip -b
+		Ex-2: ansible all -m command -a "yum install java -y" -b
+			Here root access is required, so we need to add -b
+	
+	2. copy module - Copy files or directories from server to node.
+		Ex: ansible all -m copy -a "src=file_name dest=/tmp/" -b
+	
+	3. yum module - To deal with packages, installation or removal
+		Ex: ansible all -m yum -a "pkg=java state=present" -b
+		state=present - means to be installed
+		state=absent - to uninstall a package
+		state=upgrade - to upgrade the installed package to latest version, if any older version will be there, it will get upgraded to latest one.
+		default action for yum module is install, if we will not mention amything (skip state=present), then it will install the package.
 
+	4. service module - To start a service.
+		Ex: ansible all -m service -a "name=httpd state=started" -b
+		state=started - Service will be started.
+		state=restarted - Service will be restarted.
+		state=stopped - Service will be stopped.
+		ansible all -m command -a "service httpd status" -b
+			To check the status of httpd in all the nodes
+		default action for service module is start, if we will not mention amything (skip state=started), then it will start the service
+	
+	5. user module - To create a user
+		Ex: ansible all -m user -a "name=test state=present" -b
+			- add user
+		Ex: ansible all -m user -a "name=test state=absent" -b
+			- remove user
+		default action for user module is create, if we will not mention amything (skip state=present), then it will create an user.
+		Ex: ansible all -m command -a "tail -2 /etc/passwd" -b
+			- To see last 2 lines of passwd file
+	
+	
 3. There are 2 ways by which we can write the code in Ansible Server.
 	1. Ad-Hoc Commands
 		- Ad-hoc commands are great for tasks you repeat rarely. 
