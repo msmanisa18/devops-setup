@@ -358,4 +358,33 @@ ansible nodelist -m yum -a "pkg=java state=present" -b
 
 
 
+-If we will not mention become: yes on playbook, then we cannot install amy packages in nodes.
+-In this case we need to ececute the playbook ending with -b whih will execute the play book with sudo previleages.
+Ex: ansible-playbook playbook-ex1.yml -b
+
+ansible-playbook playbook-ex1.yml --check 
+	Does the dry run. If the playbook gets executed successfully then what output we will get.
+	Here it will not execute the playbook on nodes, rather it will check the syntax whether playbook has been written properly or not.
+	
+Example:
+
+---
+- name: Playbook to install Java, maven and Git
+  hosts: all
+  become: yes
+  tasks:
+  - name: Install Latest Version Of Java
+    yum:
+        name=java
+        state=latest
+  - name: Install Latest Version Of Maven
+    yum:
+        name=maven
+        state=latest
+  - name: Install Latest Version Of Git
+    yum:
+        name=git
+        state=latest
+...
+
 
